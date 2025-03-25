@@ -1,68 +1,83 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import { UserPlus, Users, Building } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, UserPlus } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 
 export default function Dashboard() {
-  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
 
   return (
-    <Layout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Building className="h-6 w-6 text-blue-600" />
+    <div>
+      <div className="bg-white shadow rounded-lg p-6">
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Welcome to {user?.company.name}
+        </h1>
+        <p className="mt-2 text-gray-600">
+          Manage your patients and company information from this dashboard.
+        </p>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <Users className="h-6 w-6 text-gray-400" />
               </div>
-              <div>
-                <h3 className="text-lg font-semibold">Company</h3>
-                <p className="text-gray-600">{user?.company.name}</p>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Manage Patients
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    View and manage your patient records
+                  </dd>
+                </dl>
               </div>
             </div>
           </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-full">
-                <Users className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold">Total Users</h3>
-                <p className="text-gray-600">{user?.company.users.length}</p>
-              </div>
-            </div>
-          </div>
-
-          <div 
-            className="bg-white p-6 rounded-lg shadow-sm border cursor-pointer hover:bg-gray-50"
-            onClick={() => navigate('/patients')}
-          >
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-purple-100 rounded-full">
-                <UserPlus className="h-6 w-6 text-purple-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold">Manage Patients</h3>
-                <p className="text-gray-600">View and manage patients</p>
-              </div>
+          <div className="bg-gray-50 px-5 py-3">
+            <div className="text-sm">
+              <Link
+                to="/patients"
+                className="font-medium text-blue-600 hover:text-blue-900"
+              >
+                View all patients
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-          <div className="bg-white rounded-lg shadow-sm border p-4">
-            <p className="text-gray-600 text-center py-4">
-              Your recent activity will appear here
-            </p>
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <UserPlus className="h-6 w-6 text-gray-400" />
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Add New Patient
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    Register a new patient in the system
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-50 px-5 py-3">
+            <div className="text-sm">
+              <Link
+                to="/patients/new"
+                className="font-medium text-blue-600 hover:text-blue-900"
+              >
+                Add patient
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }

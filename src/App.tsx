@@ -1,44 +1,38 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useAuthStore } from './stores/authStore';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Patients from './pages/Patients';
-import { useAuthStore } from './stores/authStore';
+import PatientList from './pages/PatientList';
+import PatientForm from './pages/PatientForm';
+import Layout from './components/Layout';
 
-const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((state) => state.token);
-  return token ? <>{children}</> : <Navigate to="/login" />;
-};
+  return token ? children : <Navigate to="/login" />;
+}
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/patients"
-            element={
-              <PrivateRoute>
-                <Patients />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-        <ToastContainer position="top-right" />
-      </div>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="patients" element={<PatientList />} />
+          <Route path="patients/new" element={<PatientForm />} />
+          <Route path="patients/:id" element={<PatientForm />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
