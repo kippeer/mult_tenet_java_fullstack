@@ -1,5 +1,7 @@
 package com.example.multitenant.controller;
 
+import com.example.multitenant.dto.LoginRequest;
+import com.example.multitenant.dto.RegisterRequest;
 import com.example.multitenant.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
