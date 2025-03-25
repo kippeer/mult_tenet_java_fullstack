@@ -1,12 +1,14 @@
 package com.example.multitenant.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "companies")
 public class Company {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,6 +17,7 @@ public class Company {
     private String name;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @JsonManagedReference // Isso gerencia a relação e evita recursão infinita
     private Set<User> users;
 
     // Getters and Setters

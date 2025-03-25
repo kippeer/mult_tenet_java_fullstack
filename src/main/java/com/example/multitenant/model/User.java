@@ -1,11 +1,13 @@
 package com.example.multitenant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +20,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
+    @JsonIgnore // Evita a recursão ao serializar a Company
     private Company company;
 
     // Getters and Setters
