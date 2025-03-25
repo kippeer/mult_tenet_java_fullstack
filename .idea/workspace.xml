@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddf9355e-7354-4cbc-b0e0-afcfd04df18e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/multitenant/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/controller/AuthController.java" afterDir="false" />
-    </list>
+    <list default="true" id="ddf9355e-7354-4cbc-b0e0-afcfd04df18e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
