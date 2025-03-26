@@ -33,7 +33,9 @@ public class PatientService {
                     logger.error("User not found: {}", userEmail);
                     return new RuntimeException("User not found");
                 });
-        return patientRepository.findByCompanyId(user.getCompany().getId());
+        List<Patient> patients = patientRepository.findByCompanyId(user.getCompany().getId());
+        logger.info("Found {} patients for user: {}", patients.size(), userEmail);
+        return patients;
     }
 
     public ResponseEntity<Patient> getPatient(Long id) {
@@ -47,7 +49,10 @@ public class PatientService {
 
         return patientRepository.findById(id)
                 .filter(patient -> patient.getCompany().getId().equals(user.getCompany().getId()))
-                .map(ResponseEntity::ok)
+                .map(patient -> {
+                    logger.info("Successfully fetched patient with ID: {}", id);
+                    return ResponseEntity.ok(patient);
+                })
                 .orElseThrow(() -> {
                     logger.error("Patient not found with ID: {}", id);
                     return new PatientNotFoundException("Patient not found");
@@ -64,7 +69,9 @@ public class PatientService {
                 });
 
         patient.setCompany(user.getCompany());
-        return patientRepository.save(patient);
+        Patient savedPatient = patientRepository.save(patient);
+        logger.info("Successfully created patient with ID: {}", savedPatient.getId());
+        return savedPatient;
     }
 
     public ResponseEntity<Patient> updatePatient(Long id, Patient patientDetails) {

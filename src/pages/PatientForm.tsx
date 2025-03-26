@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { ArrowLeft } from 'lucide-react';
-import { createPatient, getPatient, updatePatient } from '../lib/api';
-import { Patient } from '../types/api';
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ArrowLeft } from "lucide-react";
+import { createPatient, getPatient, updatePatient } from "../lib/api";
+import { Patient } from "../types/api";
+import { useAuthStore } from "../stores/authStore";
 
 const FormField = ({
   label,
@@ -25,6 +26,7 @@ const FormField = ({
 export default function PatientForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -32,64 +34,83 @@ export default function PatientForm() {
     formState: { errors, isSubmitting },
   } = useForm<Patient>({
     defaultValues: {
-      gender: '',
+      gender: "",
     },
   });
 
   useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!token) {
+      toast.error("Please login to continue");
+      navigate("/login");
+      return;
+    }
+
     if (id) {
       loadPatient();
     }
-  }, [id]);
+  }, [id, token, navigate]);
 
   const loadPatient = async () => {
     try {
       const data = await getPatient(Number(id));
       reset(data);
     } catch (error) {
-      toast.error('Failed to load patient');
-      navigate('/');
+      toast.error("Failed to load patient");
+      navigate("/");
     }
   };
 
   const onSubmit = async (data: Patient) => {
     try {
+      if (!token) {
+        toast.error("Please login to continue");
+        navigate("/login");
+        return;
+      }
+
       if (id) {
         await updatePatient(Number(id), data);
-        toast.success('Patient updated successfully');
+        toast.success("Patient updated successfully");
       } else {
         await createPatient(data);
-        toast.success('Patient created successfully');
+        toast.success("Patient created successfully");
       }
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      toast.error('Failed to save patient');
+      toast.error("Failed to save patient");
     }
   };
 
+  // Rest of your component remains the same
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex items-center mb-6">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
               className="flex items-center text-gray-600 hover:text-gray-900"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back
             </button>
             <h1 className="text-2xl font-bold text-gray-900 ml-4">
-              {id ? 'Edit Patient' : 'New Patient'}
+              {id ? "Edit Patient" : "New Patient"}
             </h1>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow rounded-lg p-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="bg-white shadow rounded-lg p-6"
+          >
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField label="First Name" error={errors.firstName?.message}>
                 <input
                   type="text"
-                  {...register('firstName', { required: 'First name is required' })}
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormField>
@@ -97,7 +118,9 @@ export default function PatientForm() {
               <FormField label="Last Name" error={errors.lastName?.message}>
                 <input
                   type="text"
-                  {...register('lastName', { required: 'Last name is required' })}
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormField>
@@ -105,7 +128,7 @@ export default function PatientForm() {
               <FormField label="Email" error={errors.email?.message}>
                 <input
                   type="email"
-                  {...register('email', { required: 'Email is required' })}
+                  {...register("email", { required: "Email is required" })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormField>
@@ -113,7 +136,7 @@ export default function PatientForm() {
               <FormField label="Phone" error={errors.phone?.message}>
                 <input
                   type="tel"
-                  {...register('phone', { required: 'Phone is required' })}
+                  {...register("phone", { required: "Phone is required" })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormField>
@@ -121,14 +144,16 @@ export default function PatientForm() {
               <FormField label="Birth Date" error={errors.birthDate?.message}>
                 <input
                   type="date"
-                  {...register('birthDate', { required: 'Birth date is required' })}
+                  {...register("birthDate", {
+                    required: "Birth date is required",
+                  })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormField>
 
               <FormField label="Gender" error={errors.gender?.message}>
                 <select
-                  {...register('gender', { required: 'Gender is required' })}
+                  {...register("gender", { required: "Gender is required" })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 >
                   <option value="">Select gender</option>
@@ -139,36 +164,56 @@ export default function PatientForm() {
               </FormField>
 
               <div className="col-span-2">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Address Information</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">
+                  Address Information
+                </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <FormField label="Street" error={errors.addressStreet?.message}>
+                  <FormField
+                    label="Street"
+                    error={errors.addressStreet?.message}
+                  >
                     <input
                       type="text"
-                      {...register('addressStreet', { required: 'Street is required' })}
+                      {...register("addressStreet", {
+                        required: "Street is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
-                  <FormField label="Number" error={errors.addressNumber?.message}>
+                  <FormField
+                    label="Number"
+                    error={errors.addressNumber?.message}
+                  >
                     <input
                       type="text"
-                      {...register('addressNumber', { required: 'Number is required' })}
+                      {...register("addressNumber", {
+                        required: "Number is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
-                  <FormField label="Complement" error={errors.addressComplement?.message}>
+                  <FormField
+                    label="Complement"
+                    error={errors.addressComplement?.message}
+                  >
                     <input
                       type="text"
-                      {...register('addressComplement')}
+                      {...register("addressComplement")}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
-                  <FormField label="Neighborhood" error={errors.addressNeighborhood?.message}>
+                  <FormField
+                    label="Neighborhood"
+                    error={errors.addressNeighborhood?.message}
+                  >
                     <input
                       type="text"
-                      {...register('addressNeighborhood', { required: 'Neighborhood is required' })}
+                      {...register("addressNeighborhood", {
+                        required: "Neighborhood is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
@@ -176,7 +221,9 @@ export default function PatientForm() {
                   <FormField label="City" error={errors.addressCity?.message}>
                     <input
                       type="text"
-                      {...register('addressCity', { required: 'City is required' })}
+                      {...register("addressCity", {
+                        required: "City is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
@@ -184,15 +231,22 @@ export default function PatientForm() {
                   <FormField label="State" error={errors.addressState?.message}>
                     <input
                       type="text"
-                      {...register('addressState', { required: 'State is required' })}
+                      {...register("addressState", {
+                        required: "State is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
-                  <FormField label="ZIP Code" error={errors.addressZipCode?.message}>
+                  <FormField
+                    label="ZIP Code"
+                    error={errors.addressZipCode?.message}
+                  >
                     <input
                       type="text"
-                      {...register('addressZipCode', { required: 'ZIP code is required' })}
+                      {...register("addressZipCode", {
+                        required: "ZIP code is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
@@ -200,20 +254,32 @@ export default function PatientForm() {
               </div>
 
               <div className="col-span-2">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Emergency Contact</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">
+                  Emergency Contact
+                </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <FormField label="Name" error={errors.emergencyContactName?.message}>
+                  <FormField
+                    label="Name"
+                    error={errors.emergencyContactName?.message}
+                  >
                     <input
                       type="text"
-                      {...register('emergencyContactName', { required: 'Emergency contact name is required' })}
+                      {...register("emergencyContactName", {
+                        required: "Emergency contact name is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
-                  <FormField label="Phone" error={errors.emergencyContactPhone?.message}>
+                  <FormField
+                    label="Phone"
+                    error={errors.emergencyContactPhone?.message}
+                  >
                     <input
                       type="tel"
-                      {...register('emergencyContactPhone', { required: 'Emergency contact phone is required' })}
+                      {...register("emergencyContactPhone", {
+                        required: "Emergency contact phone is required",
+                      })}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
@@ -221,28 +287,39 @@ export default function PatientForm() {
               </div>
 
               <div className="col-span-2">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Health Information</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">
+                  Health Information
+                </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <FormField label="Health Insurance" error={errors.healthInsurance?.message}>
+                  <FormField
+                    label="Health Insurance"
+                    error={errors.healthInsurance?.message}
+                  >
                     <input
                       type="text"
-                      {...register('healthInsurance')}
+                      {...register("healthInsurance")}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
-                  <FormField label="Insurance Number" error={errors.healthInsuranceNumber?.message}>
+                  <FormField
+                    label="Insurance Number"
+                    error={errors.healthInsuranceNumber?.message}
+                  >
                     <input
                       type="text"
-                      {...register('healthInsuranceNumber')}
+                      {...register("healthInsuranceNumber")}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                   </FormField>
 
                   <div className="col-span-2">
-                    <FormField label="Allergies" error={errors.allergies?.message}>
+                    <FormField
+                      label="Allergies"
+                      error={errors.allergies?.message}
+                    >
                       <textarea
-                        {...register('allergies')}
+                        {...register("allergies")}
                         rows={3}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
@@ -250,9 +327,12 @@ export default function PatientForm() {
                   </div>
 
                   <div className="col-span-2">
-                    <FormField label="Medical Observations" error={errors.medicalObservations?.message}>
+                    <FormField
+                      label="Medical Observations"
+                      error={errors.medicalObservations?.message}
+                    >
                       <textarea
-                        {...register('medicalObservations')}
+                        {...register("medicalObservations")}
                         rows={3}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
@@ -265,7 +345,7 @@ export default function PatientForm() {
             <div className="mt-6 flex justify-end">
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate("/")}
                 className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Cancel
@@ -275,7 +355,11 @@ export default function PatientForm() {
                 disabled={isSubmitting}
                 className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
-                {isSubmitting ? 'Saving...' : id ? 'Update Patient' : 'Create Patient'}
+                {isSubmitting
+                  ? "Saving..."
+                  : id
+                  ? "Update Patient"
+                  : "Create Patient"}
               </button>
             </div>
           </form>
