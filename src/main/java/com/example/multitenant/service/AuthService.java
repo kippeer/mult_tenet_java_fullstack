@@ -38,6 +38,7 @@ public class AuthService {
     public ResponseEntity<?> register(RegisterRequest request) {
         logger.info("Tentando registrar novo usuário: {}", request.getEmail());
 
+        // Verifica se o email já está registrado
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             logger.warn("Registro falhou: Email já cadastrado - {}", request.getEmail());
             return ResponseEntity.badRequest().body("Email already registered");
@@ -53,17 +54,20 @@ public class AuthService {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFirstName(request.getFirstName());  // Definindo o firstName
-        user.setLastName(request.getLastName());    // Definindo o lastName
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setCompany(company);
 
         // Salvando o usuário no banco de dados
         userRepository.save(user);
         logger.info("Novo usuário registrado: {}", user.getEmail());
 
-        return ResponseEntity.ok("Registration successful");
-    }
+        // Gerando o token após o registro
+        String token = jwtUtil.generateToken(user.getEmail());
 
+        // Retornando o token junto com uma mensagem de sucesso
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail()));
+    }
 
     public ResponseEntity<?> login(LoginRequest request) {
         logger.info("Tentativa de login para o email: {}", request.getEmail());
@@ -77,13 +81,7 @@ public class AuthService {
                     return senhaValida;
                 })
                 .map(user -> {
-                    String token = jwtUtil.generateToken(
-                            String.valueOf(org.springframework.security.core.userdetails.User
-                                    .withUsername(user.getEmail())
-                                    .password(user.getPassword())
-                                    .authorities("USER")
-                                    .build())
-                    );
+                    String token = jwtUtil.generateToken(user.getEmail());
                     logger.info("Login bem-sucedido para {} - Token gerado", user.getEmail());
                     return ResponseEntity.ok(new AuthResponse(token, user.getEmail()));
                 })
