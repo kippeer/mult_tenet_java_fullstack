@@ -1,30 +1,51 @@
 import axios from 'axios';
-import { useAuthStore } from '../stores/authStore';
 
 const api = axios.create({
-  baseURL: '/api', // Remove the full URL since we're using the proxy
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  baseURL: 'http://localhost:8080/api',
 });
 
 api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
+  const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+export const login = async (data: { email: string; password: string }) => {
+  const response = await api.post('/auth/login', data);
+  localStorage.setItem('token', response.data.token);
+  return response.data;
+};
+
+export const register = async (data: { company: string; firstName: string; lastName: string; email: string; password: string }) => {
+  const response = await api.post('/auth/register', data);
+  return response.data;
+};
+
+export const getPatients = async () => {
+  const response = await api.get('/patients');
+  return response.data;
+};
+
+export const getPatient = async (id: number) => {
+  const response = await api.get(`/patients/${id}`);
+  return response.data;
+};
+
+export const createPatient = async (data: any) => {
+  const response = await api.post('/patients', data);
+  return response.data;
+};
+
+export const updatePatient = async (id: number, data: any) => {
+  const response = await api.put(`/patients/${id}`, data);
+  return response.data;
+};
+
+export const deletePatient = async (id: number) => {
+  const response = await api.delete(`/patients/${id}`);
+  return response.data;
+};
 
 export default api;

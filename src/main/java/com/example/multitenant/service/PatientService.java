@@ -1,12 +1,12 @@
 package com.example.multitenant.service;
 
 import com.example.multitenant.exception.PatientNotFoundException;
-import com.example.multitenant.model.Company;
 import com.example.multitenant.model.Patient;
 import com.example.multitenant.model.User;
 import com.example.multitenant.repository.PatientRepository;
 import com.example.multitenant.repository.UserRepository;
-import com.example.multitenant.util.TenantContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import java.util.List;
 @Service
 public class PatientService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PatientService.class);
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
 
@@ -26,35 +27,54 @@ public class PatientService {
 
     public List<Patient> getAllPatients() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Fetching all patients for user: {}", userEmail);
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    logger.error("User not found: {}", userEmail);
+                    return new RuntimeException("User not found");
+                });
         return patientRepository.findByCompanyId(user.getCompany().getId());
     }
 
     public ResponseEntity<Patient> getPatient(Long id) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Fetching patient with ID: {} for user: {}", id, userEmail);
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
+                .orElseThrow(() -> {
+                    logger.error("User not found: {}", userEmail);
+                    return new RuntimeException("User not found");
+                });
+
         return patientRepository.findById(id)
                 .filter(patient -> patient.getCompany().getId().equals(user.getCompany().getId()))
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+                .orElseThrow(() -> {
+                    logger.error("Patient not found with ID: {}", id);
+                    return new PatientNotFoundException("Patient not found");
+                });
     }
 
     public Patient createPatient(Patient patient) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Creating patient: {} for user: {}", patient.getName(), userEmail);
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
+                .orElseThrow(() -> {
+                    logger.error("User not found: {}", userEmail);
+                    return new RuntimeException("User not found");
+                });
+
         patient.setCompany(user.getCompany());
         return patientRepository.save(patient);
     }
 
     public ResponseEntity<Patient> updatePatient(Long id, Patient patientDetails) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Updating patient with ID: {} for user: {}", id, userEmail);
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    logger.error("User not found: {}", userEmail);
+                    return new RuntimeException("User not found");
+                });
 
         return patientRepository.findById(id)
                 .filter(patient -> patient.getCompany().getId().equals(user.getCompany().getId()))
@@ -62,22 +82,34 @@ public class PatientService {
                     patient.setName(patientDetails.getName());
                     patient.setEmail(patientDetails.getEmail());
                     patient.setBirthDate(patientDetails.getBirthDate());
+                    logger.info("Successfully updated patient with ID: {}", id);
                     return ResponseEntity.ok(patientRepository.save(patient));
                 })
-                .orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+                .orElseThrow(() -> {
+                    logger.error("Patient not found with ID: {}", id);
+                    return new PatientNotFoundException("Patient not found");
+                });
     }
 
     public ResponseEntity<?> deletePatient(Long id) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Deleting patient with ID: {} for user: {}", id, userEmail);
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    logger.error("User not found: {}", userEmail);
+                    return new RuntimeException("User not found");
+                });
 
         return patientRepository.findById(id)
                 .filter(patient -> patient.getCompany().getId().equals(user.getCompany().getId()))
                 .map(patient -> {
                     patientRepository.delete(patient);
+                    logger.info("Successfully deleted patient with ID: {}", id);
                     return ResponseEntity.ok().build();
                 })
-                .orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+                .orElseThrow(() -> {
+                    logger.error("Patient not found with ID: {}", id);
+                    return new PatientNotFoundException("Patient not found");
+                });
     }
 }
