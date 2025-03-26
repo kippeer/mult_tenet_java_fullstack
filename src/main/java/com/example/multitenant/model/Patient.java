@@ -1,5 +1,6 @@
 package com.example.multitenant.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -35,6 +36,7 @@ public class Patient {
     @Column(nullable = false)
     private String phone;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR")
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
@@ -91,9 +93,11 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invoice> invoices;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", locale = "pt-BR")
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", locale = "pt-BR")
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
