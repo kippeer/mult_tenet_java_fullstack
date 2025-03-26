@@ -91,10 +91,6 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invoice> invoices;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Document> documents;
-
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
@@ -116,4 +112,23 @@ public class Patient {
     protected void onUpdate() {
         updatedAt = OffsetDateTime.now();
     }
+
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+    public void setName(String name) {
+        // Dividir o nome completo em partes (primeiro nome e sobrenome)
+        String[] nameParts = name.split(" ");
+
+        // Atribuir o primeiro nome e o sobrenome
+        if (nameParts.length >= 1) {
+            this.firstName = nameParts[0]; // O primeiro nome será a primeira palavra
+        }
+        if (nameParts.length > 1) {
+            this.lastName = nameParts[nameParts.length - 1]; // O sobrenome será a última palavra
+        }
+    }
+
+
+
 }
