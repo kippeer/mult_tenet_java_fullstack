@@ -4,7 +4,7 @@ import { useAuthStore } from './stores/authStore';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import PatientList from './pages/PatientList';
+import PatientList from './pages/PatientDetails';
 import PatientForm from './pages/PatientForm';
 import Layout from './components/Layout';
 

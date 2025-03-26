@@ -43,20 +43,27 @@ public class AuthService {
             return ResponseEntity.badRequest().body("Email already registered");
         }
 
+        // Criação e salvamento da empresa
         Company company = new Company();
         company.setName(request.getCompanyName());
         company = companyRepository.save(company);
         logger.info("Nova empresa criada: {}", company.getName());
 
+        // Criação e configuração do usuário
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());  // Definindo o firstName
+        user.setLastName(request.getLastName());    // Definindo o lastName
         user.setCompany(company);
+
+        // Salvando o usuário no banco de dados
         userRepository.save(user);
         logger.info("Novo usuário registrado: {}", user.getEmail());
 
         return ResponseEntity.ok("Registration successful");
     }
+
 
     public ResponseEntity<?> login(LoginRequest request) {
         logger.info("Tentativa de login para o email: {}", request.getEmail());

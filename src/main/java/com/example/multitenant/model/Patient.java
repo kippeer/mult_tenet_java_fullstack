@@ -122,13 +122,12 @@ public class Patient {
 
         // Atribuir o primeiro nome e o sobrenome
         if (nameParts.length >= 1) {
-            this.firstName = nameParts[0]; // O primeiro nome será a primeira palavra
+            this.firstName = nameParts[0];
         }
         if (nameParts.length > 1) {
-            this.lastName = nameParts[nameParts.length - 1]; // O sobrenome será a última palavra
+            this.lastName = nameParts[nameParts.length - 1];
         }
     }
-
 
 
 }
