@@ -5,15 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ddf9355e-7354-4cbc-b0e0-afcfd04df18e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/exception/UserNotFoundException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/multitenant/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/multitenant/service/PatientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/service/PatientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/controller/PatientController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/controller/PatientController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/dto/RegisterRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/dto/RegisterRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Appointment$AppointmentBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Appointment$AppointmentBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Appointment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Appointment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Dentist.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Dentist.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Invoice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Invoice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/MedicalRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/MedicalRecord.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Patient$PatientBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Patient$PatientBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Patient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Patient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/enums/InvoiceStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/enums/InvoiceStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/enums/PaymentMethod.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/enums/PaymentMethod.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/security/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/security/JwtUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/service/AuthService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/service/PatientService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/service/PatientService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/example/multitenant/controller/PatientControllerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/example/multitenant/controller/PatientControllerTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
