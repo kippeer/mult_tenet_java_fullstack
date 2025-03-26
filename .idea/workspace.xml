@@ -5,18 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ddf9355e-7354-4cbc-b0e0-afcfd04df18e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/Appointment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/Dentist.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/Company.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/Patient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/multitenant/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PatientList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PatientList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Company.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Company.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Patient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/Patient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/multitenant/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/multitenant/service/AuthService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
