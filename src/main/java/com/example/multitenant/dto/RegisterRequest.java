@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
-
+    @NotNull(message = "Company name not null")
     @NotBlank(message = "Company name is required")
     private String companyName;
 

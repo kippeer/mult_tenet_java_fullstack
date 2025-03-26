@@ -78,11 +78,11 @@ public class AuthService {
                 })
                 .map(user -> {
                     String token = jwtUtil.generateToken(
-                            org.springframework.security.core.userdetails.User
+                            String.valueOf(org.springframework.security.core.userdetails.User
                                     .withUsername(user.getEmail())
                                     .password(user.getPassword())
                                     .authorities("USER")
-                                    .build()
+                                    .build())
                     );
                     logger.info("Login bem-sucedido para {} - Token gerado", user.getEmail());
                     return ResponseEntity.ok(new AuthResponse(token, user.getEmail()));

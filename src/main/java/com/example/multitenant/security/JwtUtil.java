@@ -6,9 +6,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Component
@@ -20,9 +21,10 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(UserDetails userDetails) {
+    // Agora o parâmetro é do tipo UserDetails (ou String, caso queira só o email)
+    public String generateToken(@NotBlank String email) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(email)  // Substituir userDetails.getUsername() por email
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -44,8 +46,8 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        String username = claims.getSubject();
-        
+        String username = claims.getSubject();  // Aqui usa o email
+
         return new UsernamePasswordAuthenticationToken(username, null, null);
     }
 }

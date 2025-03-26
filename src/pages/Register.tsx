@@ -12,8 +12,14 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterRequest) => {
     try {
-      await registerApi(data);
+      // Chama a API de registro
+      const response = await registerApi(data);
       toast.success("Registration successful");
+
+      // Armazena o token no localStorage (ou sessionStorage)
+      localStorage.setItem("authToken", response.token);  // Supondo que a resposta tenha a chave "token"
+
+      // Redireciona para a página de login
       navigate("/login");
     } catch (error) {
       toast.error("Registration failed");
