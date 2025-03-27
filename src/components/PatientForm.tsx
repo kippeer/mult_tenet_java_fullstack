@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, User, MapPin, Phone, Heart, AlertCircle, FileText, Mail, Calendar, UserCircle, Home, Building2, MapPinned } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { createPatient, updatePatient } from '../services/api';
 import type { Patient } from '../types';
 
@@ -44,7 +45,7 @@ function PatientForm({ patient, onClose, onSuccess }: PatientFormProps) {
       }
       onSuccess();
     } catch (err) {
-      setError('Failed to save patient');
+      setError('Falha ao salvar paciente');
     }
   };
 
@@ -55,315 +56,382 @@ function PatientForm({ patient, onClose, onSuccess }: PatientFormProps) {
     });
   };
 
+  const inputClasses = "mt-1 block w-full rounded-xl border-gray-200 bg-white/50 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm transition-colors duration-200";
+  const labelClasses = "block text-sm font-medium text-gray-700";
+  const sectionClasses = "bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:border-blue-100 transition-all duration-200";
+  const sectionHeaderClasses = "flex items-center gap-3 mb-6";
+  const iconContainerClasses = "p-2 rounded-xl";
+
   return (
-    <div className="bg-white shadow sm:rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
-        <div className="flex justify-between items-center mb-5">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            {patient ? 'Edit Patient' : 'New Patient'}
-          </h3>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/60 backdrop-blur-md overflow-y-auto h-full w-full z-50 flex items-start justify-center p-4 sm:p-6"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+        transition={{ type: "spring", duration: 0.5 }}
+        className="relative w-full max-w-4xl bg-gray-50/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden my-8"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="relative h-32 bg-gradient-to-br from-blue-600 to-indigo-600 px-8 flex items-center">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=2000')] mix-blend-overlay opacity-20 bg-center bg-cover"></div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200 backdrop-blur-sm"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6 text-white" />
           </button>
+          <div className="relative">
+            <h2 className="text-2xl font-bold text-white">
+              {patient ? 'Editar Paciente' : 'Novo Paciente'}
+            </h2>
+            <p className="text-white/80 text-sm mt-1">
+              Preencha os dados do paciente com atenção
+            </p>
+          </div>
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mx-8 mt-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-2"
+          >
+            <AlertCircle className="w-5 h-5" />
             {error}
-          </div>
+          </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                First Name
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required
-              />
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+          {/* Personal Information */}
+          <motion.section
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className={sectionClasses}
+          >
+            <div className={sectionHeaderClasses}>
+              <div className={`${iconContainerClasses} bg-blue-50`}>
+                <UserCircle className="w-5 h-5 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Informações Pessoais</h3>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Phone
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Birth Date
-              </label>
-              <input
-                type="date"
-                name="birthDate"
-                value={formData.birthDate}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Gender
-              </label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required
-              >
-                <option value="">Select gender</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Outro">Outro</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 pt-6">
-            <h4 className="text-md font-medium text-gray-900 mb-4">Address</h4>
-            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Street
-                </label>
+            
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label className={labelClasses}>Nome</label>
                 <input
                   type="text"
-                  name="addressStreet"
-                  value={formData.addressStreet}
+                  name="firstName"
+                  value={formData.firstName}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Number
-                </label>
+                <label className={labelClasses}>Sobrenome</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className={inputClasses}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={labelClasses}>E-mail</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={inputClasses}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={labelClasses}>Telefone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={inputClasses}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={labelClasses}>Data de Nascimento</label>
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  className={inputClasses}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={labelClasses}>Gênero</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className={inputClasses}
+                  required
+                >
+                  <option value="">Selecione o gênero</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* Address */}
+          <motion.section
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className={sectionClasses}
+          >
+            <div className={sectionHeaderClasses}>
+              <div className={`${iconContainerClasses} bg-indigo-50`}>
+                <MapPin className="w-5 h-5 text-indigo-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Endereço</h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className={labelClasses}>Rua</label>
+                <div className="mt-1 flex rounded-xl shadow-sm">
+                  <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 sm:text-sm">
+                    <Home className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    name="addressStreet"
+                    value={formData.addressStreet}
+                    onChange={handleChange}
+                    className="flex-1 block w-full rounded-none rounded-r-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className={labelClasses}>Número</label>
                 <input
                   type="text"
                   name="addressNumber"
                   value={formData.addressNumber}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Neighborhood
-                </label>
-                <input
-                  type="text"
-                  name="addressNeighborhood"
-                  value={formData.addressNeighborhood}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  required
-                />
+                <label className={labelClasses}>Bairro</label>
+                <div className="mt-1 flex rounded-xl shadow-sm">
+                  <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 sm:text-sm">
+                    <Building2 className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    name="addressNeighborhood"
+                    value={formData.addressNeighborhood}
+                    onChange={handleChange}
+                    className="flex-1 block w-full rounded-none rounded-r-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  City
-                </label>
+                <label className={labelClasses}>Cidade</label>
                 <input
                   type="text"
                   name="addressCity"
                   value={formData.addressCity}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  State
-                </label>
+                <label className={labelClasses}>Estado</label>
                 <input
                   type="text"
                   name="addressState"
                   value={formData.addressState}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  ZIP Code
-                </label>
-                <input
-                  type="text"
-                  name="addressZipCode"
-                  value={formData.addressZipCode}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  required
-                />
+                <label className={labelClasses}>CEP</label>
+                <div className="mt-1 flex rounded-xl shadow-sm">
+                  <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 sm:text-sm">
+                    <MapPinned className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    name="addressZipCode"
+                    value={formData.addressZipCode}
+                    onChange={handleChange}
+                    className="flex-1 block w-full rounded-none rounded-r-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    required
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </motion.section>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h4 className="text-md font-medium text-gray-900 mb-4">Emergency Contact</h4>
-            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+          {/* Emergency Contact */}
+          <motion.section
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className={sectionClasses}
+          >
+            <div className={sectionHeaderClasses}>
+              <div className={`${iconContainerClasses} bg-orange-50`}>
+                <Phone className="w-5 h-5 text-orange-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Contato de Emergência</h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Emergency Contact Name
-                </label>
+                <label className={labelClasses}>Nome do Contato</label>
                 <input
                   type="text"
                   name="emergencyContactName"
                   value={formData.emergencyContactName}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Emergency Contact Phone
-                </label>
+                <label className={labelClasses}>Telefone</label>
                 <input
                   type="tel"
                   name="emergencyContactPhone"
                   value={formData.emergencyContactPhone}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                 />
               </div>
             </div>
-          </div>
+          </motion.section>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h4 className="text-md font-medium text-gray-900 mb-4">Health Information</h4>
-            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+          {/* Health Information */}
+          <motion.section
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className={sectionClasses}
+          >
+            <div className={sectionHeaderClasses}>
+              <div className={`${iconContainerClasses} bg-green-50`}>
+                <Heart className="w-5 h-5 text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Informações de Saúde</h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Health Insurance
-                </label>
+                <label className={labelClasses}>Plano de Saúde</label>
                 <input
                   type="text"
                   name="healthInsurance"
                   value={formData.healthInsurance}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Health Insurance Number
-                </label>
+                <label className={labelClasses}>Número do Plano</label>
                 <input
                   type="text"
                   name="healthInsuranceNumber"
                   value={formData.healthInsuranceNumber}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={inputClasses}
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Allergies
-                </label>
+                <label className={labelClasses}>Alergias</label>
                 <textarea
                   name="allergies"
                   value={formData.allergies}
                   onChange={handleChange}
                   rows={3}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="List any allergies..."
+                  className={inputClasses}
+                  placeholder="Liste todas as alergias..."
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Medical Observations
-                </label>
+                <label className={labelClasses}>Observações Médicas</label>
                 <textarea
                   name="medicalObservations"
                   value={formData.medicalObservations}
                   onChange={handleChange}
                   rows={4}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Any relevant medical information..."
+                  className={inputClasses}
+                  placeholder="Informações médicas relevantes..."
                 />
               </div>
             </div>
-          </div>
+          </motion.section>
 
-          <div className="flex justify-end space-x-3">
+          {/* Form Actions */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex justify-end gap-3 pt-4"
+          >
             <button
               type="button"
               onClick={onClose}
-              className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
-              className="bg-blue-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-4 py-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 font-medium text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              {patient ? 'Update' : 'Create'} Patient
+              {patient ? 'Atualizar' : 'Criar'} Paciente
             </button>
-          </div>
+          </motion.div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
