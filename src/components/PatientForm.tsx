@@ -24,6 +24,12 @@ function PatientForm({ patient, onClose, onSuccess }: PatientFormProps) {
       addressCity: '',
       addressState: '',
       addressZipCode: '',
+      emergencyContactName: '',
+      emergencyContactPhone: '',
+      healthInsurance: '',
+      healthInsuranceNumber: '',
+      allergies: '',
+      medicalObservations: '',
     }
   );
   const [error, setError] = useState('');
@@ -42,7 +48,7 @@ function PatientForm({ patient, onClose, onSuccess }: PatientFormProps) {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -245,6 +251,96 @@ function PatientForm({ patient, onClose, onSuccess }: PatientFormProps) {
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 pt-6">
+            <h4 className="text-md font-medium text-gray-900 mb-4">Emergency Contact</h4>
+            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Emergency Contact Name
+                </label>
+                <input
+                  type="text"
+                  name="emergencyContactName"
+                  value={formData.emergencyContactName}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Emergency Contact Phone
+                </label>
+                <input
+                  type="tel"
+                  name="emergencyContactPhone"
+                  value={formData.emergencyContactPhone}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 pt-6">
+            <h4 className="text-md font-medium text-gray-900 mb-4">Health Information</h4>
+            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Health Insurance
+                </label>
+                <input
+                  type="text"
+                  name="healthInsurance"
+                  value={formData.healthInsurance}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Health Insurance Number
+                </label>
+                <input
+                  type="text"
+                  name="healthInsuranceNumber"
+                  value={formData.healthInsuranceNumber}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Allergies
+                </label>
+                <textarea
+                  name="allergies"
+                  value={formData.allergies}
+                  onChange={handleChange}
+                  rows={3}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="List any allergies..."
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Medical Observations
+                </label>
+                <textarea
+                  name="medicalObservations"
+                  value={formData.medicalObservations}
+                  onChange={handleChange}
+                  rows={4}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="Any relevant medical information..."
                 />
               </div>
             </div>

@@ -30,7 +30,7 @@ public class Patient {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -94,11 +94,11 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invoice> invoices;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", locale = "pt-BR")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ssZ")
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", locale = "pt-BR")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ssZ")
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
